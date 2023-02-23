@@ -2,36 +2,28 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './styles/main.css'
 import { PokemonCard } from './components/PokemonCard';
-
-interface IResponse {
-  id: number;
-  name: string;
-  imgUrl: string;
-  height: number;
-  weight: number;
-}
+import { IResponse } from './interfaces/interfaces';
 
 function App() {
-  const [pokemons, setPokemons] = useState([]);
+  const [pokemons, setPokemons] = useState<Array<IResponse>>([]);
 
   useEffect(() => {
     GetPokemons();
   }, []);
 
   const GetPokemons = () => {
-    const endpoints = [];
+    const endpoints: Array<string> = [];
 
     for (let id = 1; id <= 100; id++) {
       endpoints.push(`https://pokeapi.co/api/v2/pokemon/${id}`);
     }
 
-    axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res: any) => {
-      setPokemons(res);
-    });
+    axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
+      .then((res: Array<IResponse>) => { setPokemons(res) });
   };
 
   return (
-    <div className='grid grid-cols-4 gap-4'>
+    <div className='grid grid-cols-3 gap-3'>
       { pokemons.map((content: any) => {
         return <PokemonCard 
           key={content.data.id}
